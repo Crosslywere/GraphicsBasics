@@ -7,23 +7,25 @@ project "GettingStarted"
 	files {
 		"src/*.h",
 		"src/*.cpp",
-		"../vendor/glad/src/glad.c",
+		"../vendors/glad/src/glad.c",
 		"res/*.glsl",
 		"res/*.png",
+        "res/*.jpg",
 	}
 	includedirs {
-		"../vendor/glfw/include",
-		"../vendor/glad/include",
-		"../vendor/stb",
-		"../vendor/glm",
+        "%{IncludeDirs.GLFW}",
+		"%{IncludeDirs.GLAD}",
+		"%{IncludeDirs.STB}",
+		"%{IncludeDirs.GLM}",
 	}
 	vpaths {
 		["Source Files"] = { "**.cpp", "**.c" },
 		["Header Files"] = "**.h",
+        ["Resource Files"] = { "**.glsl", "**.png", "**.jpg" },
 	}
 	libdirs {
-		"../vendor/glfw/lib-vc2022",
+		"../bin/libs",
 	}
 	links {
-		"glfw3",
+		"glfw",
 	}
