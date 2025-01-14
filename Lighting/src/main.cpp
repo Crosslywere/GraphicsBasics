@@ -79,8 +79,8 @@ static void cursorPosFn(GLFWwindow* window, double xpos, double ypos) {
             float yOffset = prevY - ypos;
             prevY = ypos;
             Camera& camera = *userPtr->cameraPtr;
-            camera.SetPitch(camera.GetPitch() + yOffset * userPtr->deltaTime);
-            camera.SetYaw(camera.GetYaw() + xOffset * userPtr->deltaTime);
+            camera.SetPitch(camera.GetPitch() + yOffset * userPtr->deltaTime * CAMERA_SPEED);
+            camera.SetYaw(camera.GetYaw() + xOffset * userPtr->deltaTime * CAMERA_SPEED);
         }
         else {
             justPressed = true;
@@ -232,29 +232,41 @@ int main(int argc, char** argv) {
             // Setting the shader to active
             containerShader.UseProgram();
             // Setting shader variables
-            containerShader.SetFloat3("lightPos", lightPos);
+
+            // containerShader.SetFloat3("lightPos", lightPos);
+
+            containerShader.SetFloat3("light.position", lightPos);
+
             containerShader.SetFloat3("lightColor", lightColor);
             containerShader.SetFloat3("camPos", camera.GetPosition());
+
             // containerShader.SetFloat3("color", { 1.f, .5f, .3f });
+
             diffuse.Bind(0);
             containerShader.SetInt("material.diffuse", 0);
             specular.Bind(1);
             containerShader.SetInt("material.specular", 1);
             containerShader.SetFloat("material.shininess", 128.f);
+
             // containerShader.SetFloat3("lightColor", lightColor);
+
             containerShader.SetFloat3("light.ambient", lightColor * .2f);
             containerShader.SetFloat3("light.diffuse", lightColor * .5f);
             containerShader.SetFloat3("light.specular", lightColor * 1.f);
+
             // Setting other uniforms in the shader
             containerShader.SetFloat("uTime", now);
+
             // Setting the projection and model in the shader
             containerShader.SetMatrix4("uProj", proj);
             containerShader.SetMatrix4("uView", camera.GetViewMatrix());
             containerShader.SetMatrix4("uModel", model);
+
             // Binding the rectangle object
             glBindVertexArray(vao);
             // Drawing the rectangle using the currently active shader
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+
             // Drawing the light source
             lightShader.UseProgram();
             lightShader.SetMatrix4("uProj", proj);
@@ -263,6 +275,7 @@ int main(int argc, char** argv) {
             lightShader.SetFloat3("color", lightColor);
             glBindVertexArray(vbo);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+
             // Swapping the buffer beeing rendered
             glfwSwapBuffers(window);
         }
