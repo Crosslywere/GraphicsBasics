@@ -9,6 +9,7 @@ workspace "Graphics Basics"
     IncludeDirs["GLM"] = "%{wks.location}/vendors/glm"
 
 	include "GettingStarted"
+    include "Lighting"
 
     project "glfw"
         kind "StaticLib"
