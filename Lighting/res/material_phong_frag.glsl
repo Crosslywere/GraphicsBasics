@@ -30,5 +30,5 @@ void main() {
     // Calculating specular light
     float spec = pow(max(dot(camDir, reflectDir), 0.), material.shininess);
     vec3 specular = spec * specularFragColor * light.specular;
-    oFragColor = vec4(ambient + diffuse, 1.);
+    oFragColor = vec4(ambient + diffuse + specular, 1.);
 }
