@@ -7,14 +7,14 @@
 // The camera class
 class Camera {
 public:
-    Camera(const glm::vec3& position = { 0.f, 0.f, -3.f }, float pitch = 0.0f, float yaw = -90.0f, float fov = 90.0f)
+    Camera(const glm::vec3& position = { 0.f, 0.f, 3.f }, float pitch = 0.0f, float yaw = -90.0f, float fov = 90.0f)
         : m_Position(position), m_Pitch(pitch), m_Yaw(yaw), m_FOV(fov) {
         ClampPitch();
         Update();
     }
     // Getting the camera's view matrix
     glm::mat4 GetViewMatrix() const {
-        return glm::lookAtLH(m_Position, m_Position + m_Front, WORLD_UP);
+        return glm::lookAt(m_Position, m_Position + m_Front, WORLD_UP);
     }
     // Getting the camera's position
     const glm::vec3& GetPosition() const {
@@ -59,6 +59,9 @@ public:
     // Setting the yaw(y rotation)
     void SetYaw(float yaw) {
         m_Yaw = yaw;
+#ifdef CLAMP_YAW_TO_360_DEG
+        ClampYaw();
+#endif
         Update();
     }
     // The worlds up direction
@@ -80,6 +83,16 @@ private:
             m_Pitch = 89.0f;
         if (m_Pitch < -89.f)
             m_Pitch = -89.f;
+    }
+    void ClampYaw() {
+        float remainder = (int)glm::abs(m_Yaw) % 360;
+        remainder = glm::abs(m_Yaw) - remainder;
+        if (m_Yaw > 360.f) {
+            m_Yaw = remainder;
+        }
+        if (m_Yaw < 0.f) {
+            m_Yaw = 360.f - remainder;
+        }
     }
 private:
     glm::vec3 m_Position;
